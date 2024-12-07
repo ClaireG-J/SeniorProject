@@ -1,0 +1,156 @@
+.container {
+    width: 100%;
+    height: 100vh;
+    background-color: #b2e6b2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .teacher-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f9c97e;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .grade-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .grade-button {
+    background-color: #f9c97e;
+    color: #000;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 30px;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .dogs-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .dog-image {
+    width: 150px;
+    height: auto;
+  }
+  
+  .speech-bubble {
+    background: #fff;
+    border-radius: 20px;
+    padding: 15px;
+    width: 220px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+  }
+  
+  /* Fish Background */
+  .background-fish {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background-color: #a4d4f5; /* Light blue water */
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .fish {
+    width: 50px;
+    height: auto;
+    animation: swim 5s infinite alternate;
+  }
+  
+  @keyframes swim {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100px);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .title {
+      font-size: 2rem;
+    }
+  
+    .grade-button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+    }
+  
+    .frog-image {
+      width: 100px;
+    }
+  
+    .speech-bubble {
+      width: 180px; 
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .title {
+      font-size: 1.5rem;
+    }
+  
+    .grade-buttons {
+      gap: 10px;
+    }
+  
+    .grade-button {
+      font-size: 1rem;
+      padding: 8px 15px;
+    }
+  
+    .dog-section {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .dog-image {
+      margin-top: 10px;
+    }
+  
+    .speech-bubble {
+      width: 160px;
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+  }
+  
