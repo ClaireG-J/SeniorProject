@@ -1,23 +1,17 @@
-// import logo from './logo.svg';
 import './App.css';
 import { HomePage } from './Components/HomePage/Home';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ReactDOM from "react-dom/client";
 import { StudentLogin } from './Components/StudentLogin/StudentLogin';
-import Layout from "./Components/Layout";
 
 export default function App() {
   return (
-    <div>
-      <Router>
+    <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="studentlogin" element={<StudentLogin />} />
-        </Route>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/studentlogin" element={<StudentLogin />} />
       </Routes>
-      </Router>
-    </div>
+    </Router>
   );
 }
 
