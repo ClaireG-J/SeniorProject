@@ -1,6 +1,6 @@
 import React from 'react';
-import './StudentLogin.css'; // Ensure the CSS file matches this filename
-import dog_image from '../Assets/dog.png'; // Replace with your frog image path
+import './StudentLogin.css'; 
+import dog_image from '../../Assets/dog.png'; 
 
 export const StudentLogin = () => {
   return (

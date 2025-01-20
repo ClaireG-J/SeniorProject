@@ -1,7 +1,7 @@
 import React from 'react';
 import './Home.css';
-import dog_image from '../Assets/dog.png';
-import fish_image from '../Assets/fish.png';
+import dog_image from '../../Assets/dog.png';
+import fish_image from '../../Assets/fish.png';
 import { useNavigate } from "react-router-dom";
 
 export const HomePage = () => {
@@ -11,9 +11,13 @@ export const HomePage = () => {
     navigate('/studentlogin');
   };
 
+  const toTeacherLogin = () => {
+    navigate('/teacherloginsignup')
+  }
+
   return (
     <div className="container">
-      <button className="teacher-button">Teacher</button>
+      <button className="teacher-button" onClick={toTeacherLogin}>Teacher</button>
       <div className="header">
         <h1 className="title">Let’s Practice!</h1>
         <div className="grade-buttons">
