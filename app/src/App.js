@@ -1,13 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
 import { HomePage } from './Components/HomePage/Home';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ReactDOM from "react-dom/client";
+import { StudentLogin } from './Components/StudentLogin/StudentLogin';
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <HomePage/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/studentlogin" element={<StudentLogin />} />
+      </Routes>
+    </Router>
   );
 }
 
-export default App;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
