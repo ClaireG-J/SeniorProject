@@ -25,14 +25,6 @@ export const HomePage = () => {
           <button className={styles["grade-button"]} onClick={toStudentLogin}>Grade 4</button>
           <button className={styles["grade-button"]} onClick={toStudentLogin}>Grade 5</button>
         </div>
-        <div className={styles["dog-section"]}>
-          <div className={styles["speech-bubble"]}>When you are ready, choose your grade!</div>
-          <img src={dog_image} alt="dog" className={styles["dog-image"]} />
-        </div>
-      </div>
-      <div className={styles["background-fish"]}>
-        <img src={fish_image} alt="Fish" className={styles["fish"]} />
-        <img src={fish_image} alt="Fish" className={styles["fish"]} />
       </div>
     </div>
   );
