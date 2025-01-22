@@ -3,12 +3,18 @@ import styles from './TeacherLogin.module.css';
 import userIcon from '../../Assets/person.png';
 import emailIcon from '../../Assets/email.png';
 import passwordIcon from '../../Assets/password.png';
+import { useNavigate } from "react-router-dom";
 
 export const TeacherLogin = () => {
     const [action, setAction] = useState("Sign Up");
+    const navigate = useNavigate();
 
     const handleToggle = () => {
         setAction((prevAction) => (prevAction === "Sign Up" ? "Login" : "Sign Up"));
+    };
+
+    const tohome = () => {
+        navigate('/');
     };
 
     return (
@@ -54,7 +60,8 @@ export const TeacherLogin = () => {
                 </div>
                 {action === "Login" && (
                     <div className={styles.forgotPassword}>
-                        Forgot Password? <span className={styles.clickHere}>Click Here!</span>
+                        Forgot Password? <span className={styles.clickHere}>Click Here!</span><br />
+                        Not a teacher? <span className={styles.clickHere} onClick={tohome}>Click Here!</span>
                     </div>
                 )}
                 <div className={styles.submitContainer}>

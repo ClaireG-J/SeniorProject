@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #72c3fc;
+    background-color: #b2e6b2;
     padding: 20px;
 }
 
@@ -12,7 +12,7 @@
     flex-direction: column;
     margin: auto;
     width: 600px;
-    background: #fff;
+    background: #f9c97e;;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
@@ -27,7 +27,7 @@
 }
 
 .text {
-    color: #72c3fc;
+    color: #b2e6b2;
     font-size: 48px;
     font-weight: 700;
 }
@@ -35,7 +35,7 @@
 .underline {
     width: 61px;
     height: 6px;
-    background: #72c3fc;
+    background: #b2e6b2;
     border-radius: 9px;
 }
 
@@ -81,7 +81,7 @@
 }
 
 .forgotPassword span {
-    color: #72c3fc;
+    color: #b2e6b2;
     cursor: pointer;
     font-weight: 600;
 }
@@ -100,7 +100,7 @@
     width: 220px;
     height: 59px;
     color: #fff;
-    background: #72c3fc;
+    background: #b2e6b2;
     border-radius: 50px;
     font-size: 19px;
     font-weight: 700;
