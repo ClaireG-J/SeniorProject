@@ -12,7 +12,7 @@ export const HomePage = () => {
   };
 
   const toTeacherLogin = () => {
-    navigate('/teacherloginsignup')
+    navigate('/teacherlogin')
   }
 
   return (
