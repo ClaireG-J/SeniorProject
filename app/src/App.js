@@ -7,6 +7,7 @@ import { TeacherLogin } from './Components/pages/TeacherLogin/TeacherLogin';
 import { TeacherSignup } from './Components/pages/TeacherSignup/TeacherSignup';
 import { StudentAnswer } from './Components/pages/StudentQuiz/StudentAnswer';
 import { TeacherDashboard } from './Components/pages/TeacherDashboard/TeacherDashboard';
+import { StudentQuestion } from './Components/pages/StudentQuiz/StudentQuestion';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/teacherlogin" element={<TeacherLogin/>} />
         <Route path="/signup" element={<TeacherSignup/>} />
         <Route path="/answer" element={<StudentAnswer/>} />
+        <Route path="/question" element={<StudentQuestion/>} />
         <Route path="/dashboard" element={<TeacherDashboard/>} />
       </Routes>
     </Router>
