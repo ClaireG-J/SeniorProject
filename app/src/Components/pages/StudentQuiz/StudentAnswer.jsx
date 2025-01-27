@@ -1,8 +1,8 @@
 import React from 'react';
-import styles from './StudentQuiz.module.css';
+import styles from './StudentAnswer.module.css';
 import answerImage from '../../Assets/heart.png';
 
-export const StudentQuiz = () => {
+export const StudentAnswer= () => {
   return (
     <div className={styles.background}>
       {/* Question Number */}
