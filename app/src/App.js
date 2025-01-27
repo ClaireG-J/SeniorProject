@@ -5,7 +5,8 @@ import ReactDOM from "react-dom/client";
 import { StudentLogin } from './Components/pages/StudentLogin/StudentLogin';
 import { TeacherLogin } from './Components/pages/TeacherLogin/TeacherLogin';
 import { TeacherSignup } from './Components/pages/TeacherSignup/TeacherSignup';
-import { StudentQuiz } from './Components/pages/StudentQuiz/StudentQuiz';
+import { StudentAnswer } from './Components/pages/StudentQuiz/StudentAnswer';
+import { TeacherDashboard } from './Components/pages/TeacherDashboard/TeacherDashboard';
 
 export default function App() {
   return (
@@ -15,7 +16,8 @@ export default function App() {
         <Route path="/studentlogin" element={<StudentLogin/>} />
         <Route path="/teacherlogin" element={<TeacherLogin/>} />
         <Route path="/signup" element={<TeacherSignup/>} />
-        <Route path="/questions" element={<StudentQuiz/>} />
+        <Route path="/answer" element={<StudentAnswer/>} />
+        <Route path="/dashboard" element={<TeacherDashboard/>} />
       </Routes>
     </Router>
   );
