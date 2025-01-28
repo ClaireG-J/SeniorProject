@@ -1,8 +1,15 @@
 import React from 'react';
 import styles from './StudentQuiz.module.css';
 import answerImage from '../../Assets/heart.png';
+import { useNavigate } from "react-router-dom";
+
 
 export const StudentQuiz = () => {
+  const navigate = useNavigate();
+  const toScoreReport = () => {
+    navigate('/scorereport');
+  }
+
   return (
     <div className={styles.background}>
       {/* Question Number */}
@@ -13,13 +20,13 @@ export const StudentQuiz = () => {
       </div>
 
       <div className={styles.answersContainer}>
-        <div className={styles.answerBox}>
+        <div className={styles.answerBox}onClick={toScoreReport}>
           <img src={answerImage} alt="Answer 1" className={styles.answerImage} />
         </div>
-        <div className={styles.answerBox}>
+        <div className={styles.answerBox}onClick={toScoreReport}>
           <img src={answerImage} alt="Answer 2" className={styles.answerImage} />
         </div>
-        <div className={styles.answerBox}>
+        <div className={styles.answerBox}onClick={toScoreReport}>
           <img src={answerImage} alt="Answer 3" className={styles.answerImage} />
         </div>
       </div>

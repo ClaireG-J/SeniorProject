@@ -6,6 +6,7 @@ import { StudentLogin } from './Components/pages/StudentLogin/StudentLogin';
 import { TeacherLogin } from './Components/pages/TeacherLogin/TeacherLogin';
 import { TeacherSignup } from './Components/pages/TeacherSignup/TeacherSignup';
 import { StudentQuiz } from './Components/pages/StudentQuiz/StudentQuiz';
+import { ScoreReport } from './Components/pages/ScoreReport/ScoreReport';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/teacherlogin" element={<TeacherLogin/>} />
         <Route path="/signup" element={<TeacherSignup/>} />
         <Route path="/questions" element={<StudentQuiz/>} />
+        <Route path="/scorereport" element={<ScoreReport/>} />
       </Routes>
     </Router>
   );
