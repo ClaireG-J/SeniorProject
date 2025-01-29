@@ -1,10 +1,10 @@
 import React from 'react';
-import styles from './StudentQuiz.module.css';
+import styles from './StudentAnswer.module.css';
 import answerImage from '../../Assets/heart.png';
 import { useNavigate } from "react-router-dom";
 
 
-export const StudentQuiz = () => {
+export const StudentAnswer = () => {
   const navigate = useNavigate();
   const toScoreReport = () => {
     navigate('/scorereport');

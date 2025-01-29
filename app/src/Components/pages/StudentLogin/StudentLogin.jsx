@@ -9,8 +9,8 @@ export const StudentLogin = () => {
     navigate('/');
 };
 
-  const toQuestions = () => {
-    navigate('/questions');
+  const toQuestion = () => {
+    navigate('/question');
   }
 
   return (
@@ -29,7 +29,7 @@ export const StudentLogin = () => {
           <div className={styles.home}>
                         Not a student? <span className={styles.clickHere} onClick={tohome}>Click Here!</span>
           </div>
-          <button className={styles['form-submit']} onClick={toQuestions}>Let's Go!</button>
+          <button className={styles['form-submit']} onClick={toQuestion}>Let's Go!</button>
         </div>
       </div>
     </div>

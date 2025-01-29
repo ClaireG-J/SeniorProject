@@ -13,7 +13,11 @@ export const TeacherLogin = () => {
     };
 
     const toSignup = () => {
-        navigate('/signup')
+        navigate('/signup');
+    }
+
+    const toDashboard = () => {
+        navigate('/dashboard');
     }
 
     return (
@@ -46,6 +50,7 @@ export const TeacherLogin = () => {
                 <div className={styles.submitContainer}>
                     <div
                         className={styles.submit}
+                        onClick={toDashboard}
                     >
                         Login
                     </div>
