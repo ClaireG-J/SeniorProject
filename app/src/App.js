@@ -9,6 +9,7 @@ import { StudentAnswer } from './Components/pages/StudentQuiz/StudentAnswer';
 import { TeacherDashboard } from './Components/pages/TeacherDashboard/TeacherDashboard';
 import { StudentQuestion } from './Components/pages/StudentQuiz/StudentQuestion';
 import { StudentScore } from './Components/pages/TeacherDashboard/StudentScore';
+import { ScoreReport } from './Components/pages/ScoreReport/ScoreReport';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/studentlogin" element={<StudentLogin/>} />
         <Route path="/teacherlogin" element={<TeacherLogin/>} />
         <Route path="/signup" element={<TeacherSignup/>} />
+        <Route path="/scorereport" element={< ScoreReport/>} />
         <Route path="/answer" element={<StudentAnswer/>} />
         <Route path="/question" element={<StudentQuestion/>} />
         <Route path="/dashboard" element={<TeacherDashboard/>} />
