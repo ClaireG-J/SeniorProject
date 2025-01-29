@@ -8,6 +8,7 @@ import { TeacherSignup } from './Components/pages/TeacherSignup/TeacherSignup';
 import { StudentAnswer } from './Components/pages/StudentQuiz/StudentAnswer';
 import { TeacherDashboard } from './Components/pages/TeacherDashboard/TeacherDashboard';
 import { StudentQuestion } from './Components/pages/StudentQuiz/StudentQuestion';
+import { StudentScore } from './Components/pages/TeacherDashboard/StudentScore';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/answer" element={<StudentAnswer/>} />
         <Route path="/question" element={<StudentQuestion/>} />
         <Route path="/dashboard" element={<TeacherDashboard/>} />
+        <Route path="/teacherscore" element={<StudentScore/>} />
       </Routes>
     </Router>
   );

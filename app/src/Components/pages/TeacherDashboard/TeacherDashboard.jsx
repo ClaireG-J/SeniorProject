@@ -1,7 +1,12 @@
 import React from 'react';
 import styles from './TeacherDashboard.module.css';
+import { useNavigate } from "react-router-dom";
 
 export const TeacherDashboard = () => {
+    const navigate = useNavigate();
+  const toScore = () => {
+    navigate('/teacherscore');
+};
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.topRow}>
@@ -15,7 +20,7 @@ export const TeacherDashboard = () => {
 
       <div className={styles.bottomRow}>
         <div className={styles.buttons}>
-          <div className={styles.button}>Grade 3</div>
+          <div className={styles.button} onClick={toScore}>Grade 3</div>
           <div className={styles.button}>Grade 4</div>
           <div className={styles.button}>Grade 5</div>
         </div>

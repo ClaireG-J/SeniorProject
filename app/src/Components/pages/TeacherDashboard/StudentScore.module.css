@@ -1,0 +1,102 @@
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #ecebe1;
+    position: relative;
+    min-height: 100vh;
+}
+
+.button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #f5c8b5;
+    padding: 15px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+    margin-left: 7%
+}
+
+.tableContainer {
+    margin-top: 5%;
+    background-color: white;
+    border: 2px solid black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden; 
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+/* Thead and tbody as separate blocks */
+table thead,
+table tbody {
+    display: block;
+}
+
+table thead {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    border-bottom: 2px solid black;
+}
+
+table tbody {
+    height: 400px; 
+    overflow-y: auto; 
+}
+
+thead tr th {
+    padding: 10px;
+    text-align: center;
+    border-right: 1px solid black;
+    height: 40px;
+    white-space: nowrap;
+}
+
+tbody td {
+    padding: 10px;
+    text-align: center;
+    border-right: 1px solid black;
+    white-space: nowrap;
+}
+
+tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+thead th,
+tbody td {
+    width: 150px; 
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+@media (max-width: 768px) {
+    .tableContainer {
+        width: 90%; 
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    .button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
