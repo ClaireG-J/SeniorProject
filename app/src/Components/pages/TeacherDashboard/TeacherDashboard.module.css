@@ -12,54 +12,58 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 0 5%;
+    padding:1% 2%;
     position: relative;
 }
 
 .name {
-    background-color: brown;
-    color: white;
-    border-radius: 10px;
+    background-color: rgb(226, 201, 201);
+    color: black;
+    border-radius: 15px;
     padding: 10px 20px;
-    font-size: 1.2rem;
+    font-size: 2.8rem;
     text-align: center;
     margin-bottom: 20px;
+    box-shadow: 4px 4px 2px rgba(175, 166, 166, 0.462);
 }
 
 .codeWrapper {
     position: absolute;
-    left: 5%;
-    top: 100px;
+    right: 3%;
+    top: .2px;
     display: flex;
     flex-direction: column;
     gap: 5px;
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
+    /*background-color: rgb(237, 216, 216);*/
+    /*border: .5px solid #ccc;*/
     border-radius: 10px;
     padding: 15px 20px;
-    font-size: 1rem;
+    font-size: 1.8rem;
     color: #333;
     width: fit-content;
 }
 
 .codeTitle {
-    font-size: 1.1rem;
+    font-size: 2rem;
 }
 
 .code {
     font-family: monospace;
-    background-color: #eee;
+    /*background-color: rgb(237, 216, 216);*/
     color: #222;
     padding: 5px 10px;
-    border-radius: 5px;
+    /*border-radius: 5px;*/
     font-weight: bold;
     text-align: center;
 }
 
 .gradePrompt {
-    font-size: 1rem;
+    font-size: 2rem;
     color: #333;
-    max-width: 30%;
+    position: absolute;
+    left: 35px;
+    top: 100px;
+    /*max-width: 30%;*/
     text-align: right;
 }
 
@@ -72,28 +76,31 @@
 }
 
 .buttons {
+    position:absolute;
+    top: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 50px;
     margin: 0 auto;
 }
 
 .button {
-    background-color: #f9c97e;
+    background-color: rgb(226, 201, 201);
     color: #000;
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: bold;
     border: none;
     border-radius: 10px;
-    padding: 20px 40px;
+    padding: 30px 37px;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: 100%;
-    max-width: 300px;
+    width: 300%;
+    box-shadow: 4px 2px 3px rgba(175, 166, 166, 0.462);
+    /*max-width: 300px;*/
 }
 
 .button:hover {
-    background-color: #f7b065;
+    background-color: rgb(200, 177, 177);
 }

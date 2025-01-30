@@ -12,8 +12,8 @@
     flex-direction: column;
     margin: auto;
     width: 600px;
-    background: #f5c8b5;
-    padding: 30px;
+    background: rgb(208, 183, 183);
+    padding: 25px;
     border-radius: 10px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -100,12 +100,16 @@
     width: 220px;
     height: 59px;
     color: black;
-    background: #ede8d0;
+    background: rgb(225, 204, 204);
     border-radius: 50px;
     font-size: 19px;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.3s;
+}
+
+.submit:hover{
+    background-color: rgb(208, 188, 188);
 }
 
 .submit.gray {
