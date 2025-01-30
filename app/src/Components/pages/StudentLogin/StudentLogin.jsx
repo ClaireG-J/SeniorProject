@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './StudentLogin.module.css'; 
-import frog_image from '../../Assets/frog.png';
+import frog_image from '../../Assets/frogButterfly.png';
 import { useNavigate } from "react-router-dom";
 
 export const StudentLogin = () => {

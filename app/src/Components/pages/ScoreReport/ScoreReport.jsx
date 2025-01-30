@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ScoreReport.module.css'; 
 import bg_wave from '../../Assets/bgwave.png';
-import frog_image from '../../Assets/frog.png';
+import frog_image from '../../Assets/frogWink.png';
 import { useNavigate } from "react-router-dom";
 
 export const ScoreReport = () => {
