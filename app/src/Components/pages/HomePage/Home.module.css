@@ -15,18 +15,20 @@
 
   
   .title {
-    font-size: 3rem;
+    position: absolute;
+    top: 1px;
+    left: 340px;
+    font-size: 4.8rem;
     font-weight: bold;
     color: #000;
-    margin-bottom: 20px;
     text-align: center;
   }
   
   .teacher-button {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background-color: #f9c97e;
+    top: 10px;
+    right: 10px;
+    background-color: #ffd89a;
     border: none;
     padding: 10px 20px;
     font-size: 2rem;
@@ -35,20 +37,22 @@
   }
   
   .grade-buttons {
+    position: absolute;
+    top: 150px;
+    left: 450px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 50px;
   }
   
   .grade-button {
-    background-color: #f9c97e;
+    background-color: #ffd89a;
     color: #000;
-    font-size: 1.5rem;
+    font-size: 3rem;
     font-weight: bold;
     border: none;
     border-radius: 10px;
-    padding: 15px 30px;
+    padding: 40px 50px;
     cursor: pointer;
     text-align: center;
   }
