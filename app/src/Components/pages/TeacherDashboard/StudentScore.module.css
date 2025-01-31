@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: #ecebe1;
+    background-color: #ede8d0;
     position: relative;
     min-height: 100vh;
 }
@@ -12,13 +12,18 @@
     position: absolute;
     top: 20px;
     left: 20px;
-    background-color: #f5c8b5;
+    background-color: rgb(208, 183, 183);
     padding: 15px 25px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     text-align: center;
-    margin-left: 7%
+    margin-left: 7%;
+    box-shadow: 3px 2px 3px rgba(175, 166, 166, 0.462);
+}
+
+.button:hover {
+    background-color: rgb(185, 165, 165); ;
 }
 
 .tableContainer {
