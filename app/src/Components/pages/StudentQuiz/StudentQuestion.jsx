@@ -12,7 +12,7 @@ export const StudentQuestion= () => {
       <div className={styles.questionNumber}>Question 1</div>
 
       <div className={styles.questionContainer}>
-        <h1 className={styles.question} onClick={toAnswer}>Here is a short story about a girl that found a kitten at an animal shelter. As I read, tell me how the kitten might feel in the story.</h1>
+        <h1 className={styles.question} onClick={toAnswer}>Here is a short story about a girl that found a kitten at an animal shelter. As I read, listen for clues that tell you how the kitten feels at the end of the story.</h1>
       </div>
     </div>
   );
