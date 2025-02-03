@@ -66,12 +66,11 @@
 }
 
 .answerImage {
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 120%;
+    max-height: 120%;
     object-fit: contain;
-    border-radius: 5px;
+    border-radius: 10px;
   }
-  
 
 .answerBox:hover {
     transform: scale(1.05);
