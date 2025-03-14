@@ -1,12 +1,21 @@
 from django.db import models
+# For password security
+from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 class Teacher(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=100, default="Unknown")
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255, default="Unkown")  # Consider hashing passwords
-    classcode = models.BigIntegerField()
+    password = models.CharField(max_length=255) #default="Unkown")  # Consider hashing passwords
+    classcode = models.CharField(max_length=10, unique=True)
+
+    # Addition from AI. Password hashing
+    def save(self, *args, **kwargs):
+        # Ensure password is hashed before saving
+        if not self.password.startswith("pbkdf2_sha256$"):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return self.name
