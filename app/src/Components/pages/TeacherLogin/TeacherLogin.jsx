@@ -24,27 +24,30 @@ export const TeacherLogin = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/login/', {  // Adjust the URL if needed
+            const response = await fetch('http://localhost:8000/api/login/', {  
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             });
-
+    
             const data = await response.json();
-
+    
             if (response.ok) {
-                // On success, navigate to the dashboard or home page
+                localStorage.setItem("teacherName", data.teacher);
+                localStorage.setItem("teacherCode", data.classcode);
+                
+                // Navigate to dashboard
                 toDashboard();
             } else {
-                // Display error if login failed
                 setError(data.error || "An error occurred");
             }
         } catch (error) {
             setError("Network error: " + error.message);
         }
     };
+    
 
     return (
         <div className={styles.pageWrapper}>

@@ -41,7 +41,6 @@ def signup_teacher(request):
     )
     return Response({"message": "Signup successful", "teacher": teacher.name})
 
-# Secure teacher login
 @api_view(['POST'])
 def login_teacher(request):
     email = request.data.get("email")
@@ -49,10 +48,15 @@ def login_teacher(request):
     
     try:
         teacher = Teacher.objects.get(email=email)
-        if check_password(password, teacher.password):  # Securely compare hashed password
-            return Response({"message": "Login successful", "teacher": teacher.name})
+        if check_password(password, teacher.password):  
+            return Response({
+                "message": "Login successful",
+                "teacher": teacher.name,
+                "classcode": teacher.classcode 
+            })
         else:
             return Response({"error": "Invalid credentials"}, status=401)
     except Teacher.DoesNotExist:
         return Response({"error": "Teacher not found"}, status=404)
+
 
