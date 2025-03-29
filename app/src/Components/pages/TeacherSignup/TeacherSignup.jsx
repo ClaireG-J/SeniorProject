@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React, {useState} from 'react'; 
 import styles from './TeacherSignup.module.css';
 import userIcon from '../../Assets/person.png';
 import emailIcon from '../../Assets/email.png';
@@ -8,12 +8,57 @@ import { useNavigate } from "react-router-dom";
 export const TeacherSignup = () => {
     const navigate = useNavigate();
 
-    const tohome = () => {
-        navigate('/');
+    // ***********************************************************************************************
+    // ***Changes made to connect to backend***
+    // Essentially, for everything that we have to connect to the django backend, we have to add some
+    // version of this code I believe. We also must go into the html section of the file and add some
+    // small adjustments. The following code just gives this react script a connection to the django
+    // backend, so that information can be exchanged.
+
+    // State to hold form input values
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+        classcode: "",
+    });
+
+    const [error, setError] = useState("");
+
+    // Handle input changes
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
     };
-    const tologin = () => {
-        navigate('/teacherlogin');
+
+    // Handle form submission
+    const handleSignup = async () => {
+        setError("");  // Clear any previous errors
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/signup/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                alert("Signup successful!");
+                navigate('/teacherlogin'); // Redirect to login after successful signup
+            } else {
+                setError(data.error || "Signup failed. Please try again.");
+            }
+        } catch (error) {
+            setError("An error occurred. Please try again.");
+        }
     };
+    //************************************************************************************************
 
     return (
         <div className={styles.pageWrapper}>
@@ -28,37 +73,32 @@ export const TeacherSignup = () => {
                                 Name
                             </label>
                             <img src={userIcon} alt="User Icon" />
-                            <input id="name" type="text" placeholder="Name" />
+                            <input id="name" name="name" type="text" placeholder="Name" value={formData.name} onChange={handleChange}/>
                         </div>
                     <div className={styles.input}>
                         <label htmlFor="email" className={styles.visuallyHidden}>
                             Email
                         </label>
                         <img src={emailIcon} alt="Email Icon" />
-                        <input id="email" type="email" placeholder="Email" />
+                        <input id="email" name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange}/>
                     </div>
                     <div className={styles.input}>
                         <label htmlFor="password" className={styles.visuallyHidden}>
                             Password
                         </label>
                         <img src={passwordIcon} alt="Password Icon" />
-                        <input id="password" type="password" placeholder="Password" />
+                        <input id="password" name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange}/>
                     </div>
                         <div className={styles.input}>
                             <label htmlFor="classCode" className={styles.visuallyHidden}>
                                 Class Code
                             </label>
                             <img src={userIcon} alt="Class Code Icon" />
-                            <input id="classCode" type="text" placeholder="Class Code" />
+                            <input id="classCode" name="classcode" type="text" placeholder="Class Code" value={formData.classcode} onChange={handleChange}/>
                         </div>
                 </div>
                 <div className={styles.submitContainer}>
-                    <div
-                        className={styles.submit} 
-                        onClick={tologin}
-                    >
-                        Sign Up
-                    </div>
+                    <div className={styles.submit} onClick={handleSignup}>Sign Up</div>
                 </div>
             </div>
         </div>
