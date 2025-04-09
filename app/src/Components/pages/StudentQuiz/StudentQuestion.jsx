@@ -6,9 +6,11 @@ export const StudentQuestion = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const quizId = location.state?.quizId;
-  const [promptIndex, setPromptIndex] = useState(0);
+  const [promptIndex, setPromptIndex] = useState(location.state?.promptIndex || 0);
   const [prompt, setPrompt] = useState("");
   const [questions, setQuestions] = useState([]);
+  const [totalScore, setTotalScore] = useState(location.state?.totalScore || 0);
+
 
   useEffect(() => {
     if (!quizId) {
@@ -27,7 +29,9 @@ export const StudentQuestion = () => {
         
         if (data.questions && data.questions.length > 0) {
           setQuestions(data.questions);
-          setPrompt(data.questions[0].prompt); // Display the first question's text as the prompt
+
+          const uniquePrompts = [...new Set(data.questions.map(q => q.prompt))];
+          setPrompt(uniquePrompts[promptIndex] || "No more prompts.");
         } else {
           setPrompt("No questions found for this quiz.");
         }
@@ -38,20 +42,29 @@ export const StudentQuestion = () => {
     };
 
     fetchQuestions();
-  }, [quizId]);
+  }, [quizId, promptIndex]);
 
   const toAnswerPage = () => {
-  
+    const currentPrompt = prompt;
+    const filteredQuestions = questions.filter(
+      (q) => q.prompt === currentPrompt
+    );
+
     navigate("/answer", {
-      state: { questions, quizId, promptIndex },
-    });
+      state: {
+        questions: filteredQuestions,
+        quizId,
+        promptIndex,
+        totalScore, 
+      },
+    });    
   };
 
   return (
     <div className={styles.background}>
       <div className={styles.questionContainer}>
         <h1 className={styles.question} onClick={toAnswerPage}>
-          {prompt}
+          {prompt || "Loading prompt..."}
         </h1>
       </div>
     </div>
