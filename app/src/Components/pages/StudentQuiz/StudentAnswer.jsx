@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./StudentAnswer.module.css";
 import answerImage1 from "../../Assets/cat1.png";
@@ -11,50 +11,71 @@ export const StudentAnswer = () => {
   const questions = location.state?.questions || [];
   const quizId = location.state?.quizId;
   const promptIndex = location.state?.promptIndex || 0;
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
-  const [attempts, setAttempts] = useState(0);  // Keep track of attempts
+  const [disabledOptions, setDisabledOptions] = useState([]);
+  const [pointsLeft, setPointsLeft] = useState(4);
+  const [isAnsweredCorrectly, setIsAnsweredCorrectly] = useState(false);
+  const [totalScore, setTotalScore] = useState(location.state?.totalScore || 0);
 
-  const answerImages = [answerImage1, answerImage2, answerImage3]; // Array of answer images
-
+  const answerImages = [answerImage1, answerImage2, answerImage3];
   const currentQuestion = questions[currentQuestionIndex];
 
-  // This function maps the answer options to the correct image
   const getAnswerImage = (optionNumber) => {
-    return answerImages[optionNumber - 1]; // Adjust for zero-based index
+    return answerImages[optionNumber - 1];
   };
 
-  // Function to check if the selected answer is correct
   const checkAnswer = (selectedOption) => {
-    const correctAnswer = parseInt(currentQuestion.correct_answer, 10); 
-    setSelectedAnswer(selectedOption);
-  
-    // Now, compare selectedOption with correctAnswer
-    setIsAnswerCorrect(selectedOption === correctAnswer); // Compare numbers directly
-  };
+    const correctAnswer = parseInt(currentQuestion.correct_answer, 10);
 
-  const toNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-      setSelectedAnswer(null); 
-      setIsAnswerCorrect(null); 
-      setAttempts(0); 
+    if (selectedOption === correctAnswer) {
+      setIsAnsweredCorrectly(true);
+      const updatedScore = totalScore + pointsLeft;
+      setTotalScore(updatedScore);
+      setTimeout(() => {
+        goToNextQuestion(updatedScore);
+      }, 1000);
+
     } else {
-      navigate("/question", {
-        state: { quizId, promptIndex: promptIndex + 1 },
-      });
+      if (!disabledOptions.includes(selectedOption)) {
+        setDisabledOptions((prev) => [...prev, selectedOption]);
+        setPointsLeft((prev) => Math.max(prev - 1, 0));
+      }
     }
   };
 
-  const resetQuestion = () => {
-    setSelectedAnswer(null); 
-    setIsAnswerCorrect(null);
-    setAttempts((prev) => prev + 1);  
+  const goToNextQuestion = (scoreToCarry) => {
+    const nextIndex = currentQuestionIndex + 1;
+  
+    if (nextIndex < questions.length) {
+      const currentPrompt = currentQuestion.prompt;
+      const nextPrompt = questions[nextIndex].prompt;
+  
+      if (currentPrompt !== nextPrompt) {
+        navigate("/question", {
+          state: {
+            quizId,
+            promptIndex: promptIndex + 1,
+            totalScore: scoreToCarry,
+          },
+        });
+      } else {
+        setCurrentQuestionIndex(nextIndex);
+        setDisabledOptions([]);
+        setPointsLeft(4);
+        setIsAnsweredCorrectly(false);
+      }
+    } else {
+      navigate("/question", {
+        state: {
+          quizId,
+          promptIndex: promptIndex + 1,
+          totalScore: scoreToCarry,
+        },
+      });
+    }
   };
-
-  useEffect(() => {
-  }, [currentQuestionIndex]);
+  
 
   return (
     <div className={styles.background}>
@@ -69,71 +90,34 @@ export const StudentAnswer = () => {
       </div>
 
       <div className={styles.answersContainer}>
-        {/* Answer 1 */}
-        <div
-          className={`${styles.answerBox} ${
-            selectedAnswer === 1 ? styles.selected : ""
-          }`}
-          onClick={() => checkAnswer(1)}
-        >
-          <img
-            src={getAnswerImage(1)}
-            alt="Answer 1"
-            className={styles.answerImage}
-          />
-        </div>
-
-        {/* Answer 2 */}
-        <div
-          className={`${styles.answerBox} ${
-            selectedAnswer === 2 ? styles.selected : ""
-          }`}
-          onClick={() => checkAnswer(2)}
-        >
-          <img
-            src={getAnswerImage(2)}
-            alt="Answer 2"
-            className={styles.answerImage}
-          />
-        </div>
-
-        {/* Answer 3 */}
-        <div
-          className={`${styles.answerBox} ${
-            selectedAnswer === 3 ? styles.selected : ""
-          }`}
-          onClick={() => checkAnswer(3)}
-        >
-          <img
-            src={getAnswerImage(3)}
-            alt="Answer 3"
-            className={styles.answerImage}
-          />
-        </div>
+        {[1, 2, 3].map((option) => (
+          <div
+            key={option}
+            className={`${styles.answerBox} 
+              ${disabledOptions.includes(option) ? styles.disabled : ""}
+              ${isAnsweredCorrectly && parseInt(currentQuestion.correct_answer) === option ? styles.selected : ""}
+            `}
+            onClick={() =>
+              !disabledOptions.includes(option) && !isAnsweredCorrectly && checkAnswer(option)
+            }
+          >
+            <img
+              src={getAnswerImage(option)}
+              alt={`Answer ${option}`}
+              className={styles.answerImage}
+            />
+          </div>
+        ))}
       </div>
 
-      {/* Feedback */}
-      {isAnswerCorrect !== null && (
+      <div className={styles.points}>Points for this question: {pointsLeft}</div>
+      <div className={styles.points}>Total Score: {totalScore}</div>
+
+      {isAnsweredCorrectly && (
         <div className={styles.feedback}>
-          {isAnswerCorrect ? (
-            <span className={styles.correct}>Correct!</span>
-          ) : (
-            <span className={styles.incorrect}>Incorrect!</span>
-          )}
+          <span className={styles.correct}>Correct! +{pointsLeft} points</span>
         </div>
       )}
-
-      {/* Retry Button */}
-      {attempts < 2 && (
-        <div className={styles.retryButton} onClick={resetQuestion}>
-          Retry
-        </div>
-      )}
-
-      {/* Next Question Button */}
-      <div className={styles.nextButton} onClick={toNextQuestion}>
-        {currentQuestionIndex < questions.length - 1 ? "Next Question" : "Finish Quiz"}
-      </div>
     </div>
   );
 };

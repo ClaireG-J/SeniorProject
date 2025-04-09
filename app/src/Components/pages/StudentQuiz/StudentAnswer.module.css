@@ -70,10 +70,60 @@
     max-height: 120%;
     object-fit: contain;
     border-radius: 10px;
-  }
+}
 
 .answerBox:hover {
     transform: scale(1.05);
+}
+
+
+.selected {
+    border: 3px solid #4caf50;
+    background-color: #e0f7e9;
+}
+
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+
+.feedback {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.correct {
+    color: #4caf50;
+}
+
+.incorrect {
+    color: #f44336;
+}
+
+.points {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+}
+
+.nextButton {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: #4caf50;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nextButton:hover {
+    background-color: #45a049;
 }
 
 @media (max-width: 768px) {
