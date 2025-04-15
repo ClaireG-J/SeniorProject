@@ -89,13 +89,6 @@ export const TeacherSignup = () => {
                         <img src={passwordIcon} alt="Password Icon" />
                         <input id="password" name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange}/>
                     </div>
-                        <div className={styles.input}>
-                            <label htmlFor="classCode" className={styles.visuallyHidden}>
-                                Class Code
-                            </label>
-                            <img src={userIcon} alt="Class Code Icon" />
-                            <input id="classCode" name="classcode" type="text" placeholder="Class Code" value={formData.classcode} onChange={handleChange}/>
-                        </div>
                 </div>
                 <div className={styles.submitContainer}>
                     <div className={styles.submit} onClick={handleSignup}>Sign Up</div>
