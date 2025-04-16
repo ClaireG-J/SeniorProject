@@ -6,12 +6,15 @@ from .models import Teacher
 from .models import Student
 from .models import Quiz
 from .models import Question
+from .models import StudentScore
 from .serializers import TeacherSerializer
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 
 # This is essentially where the functions are for the backend. The functions go here
@@ -91,7 +94,8 @@ def student_login(request):
             return JsonResponse({
                 "teacher_id": teacher_id,
                 "grade": grade,
-                "quiz_id": quiz.id 
+                "quiz_id": quiz.id,
+                "username": username,
             })
 
         except Student.DoesNotExist:
@@ -247,3 +251,81 @@ def create_question(request, quiz_id):
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid HTTP method"}, status=405)
+
+@api_view(['POST'])
+def submit_score(request):
+    data = request.data
+    print("Received data:", data)
+
+    quiz_id = data.get('quizId')
+    score = data.get('score')
+    classcode = data.get('classcode')
+    username = data.get('username')
+    grade = data.get('grade')
+
+    if not all([quiz_id, score, username, grade]):
+        return Response({'error': 'Missing required fields'}, status=400)
+
+    try:
+        student = get_object_or_404(Student, username=username, grade=grade)
+
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+
+        if StudentScore.objects.filter(student_username=username, quiz=quiz).exists():
+            return Response({'message': 'Score already submitted for this student and quiz.'}, status=200)
+
+        StudentScore.objects.create(
+            student_username=username, 
+            quiz=quiz,
+            grade=grade,
+            score=score,
+            classcode = classcode
+        )
+
+        return Response({'message': 'Score submitted successfully'}, status=200)
+
+    except Exception as e:
+        print("Error:", str(e))
+        return Response({'error': str(e)}, status=500)
+
+
+@api_view(['GET'])
+def get_student_score(request, student_username, grade):
+    try:
+        score = StudentScore.objects.get(student_username=student_username, grade=grade)
+        
+        return Response({
+            'score': score.score,
+            'grade': score.grade,
+        }, status=200)
+    except StudentScore.DoesNotExist:
+        return Response({'error': 'Score not found for this student and grade.'}, status=400)
+
+
+@api_view(['GET'])
+def get_scores_by_classcode(request, classcode):
+    try:
+        grade = request.query_params.get('grade', None)
+
+        if grade:
+            student_scores = StudentScore.objects.filter(classcode=classcode, grade=grade)
+        else:
+            student_scores = StudentScore.objects.filter(classcode=classcode)
+
+        scores_data = [
+            {
+                'student_username': score.student_username,
+                'score': score.score,
+            }
+            for score in student_scores
+        ]
+
+        return Response(scores_data)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+
+
+
+

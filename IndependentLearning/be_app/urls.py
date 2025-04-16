@@ -16,4 +16,7 @@ urlpatterns = [
     path("create-quiz/", views.create_quiz_with_questions, name="create_quiz"),
     path('api/quiz/<int:quiz_id>/get-all-questions/', views.get_all_questions, name='get_all_questions'),
     path('api/quiz/<int:quiz_id>/create-question/', views.create_question, name='create_question'),
+    path('api/submit-score/', views.submit_score, name='submit-score'),
+    path('api/student/<str:student_username>/grade/<int:grade>/score/', views.get_student_score, name="get_student_score"),
+    path('api/scores/<str:classcode>/', views.get_scores_by_classcode, name='get_scores_by_classcode'),
 ]
