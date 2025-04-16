@@ -21,7 +21,7 @@ class Teacher(models.Model):
 class Student(models.Model):
     id = models.BigAutoField(primary_key=True)
     username = models.CharField(max_length=100)
-    classcode = models.CharField(max_length=10)  # Change from ForeignKey to CharField
+    classcode = models.CharField(max_length=10)
     grade = models.IntegerField()
 
     def __str__(self):
@@ -35,10 +35,7 @@ class Quiz(models.Model):
     grade = models.IntegerField()
 
     def __str__(self):
-        return f"Quiz {self.id}: {self.title}"  
-
-# Question Model
-from django.db import models
+        return f"Quiz {self.id}"  
 
 def get_default_quiz():
     return Quiz.objects.first().id if Quiz.objects.exists() else None
@@ -50,9 +47,17 @@ class Question(models.Model):
     option_one = models.CharField(max_length=255)
     option_two = models.CharField(max_length=255)
     option_three = models.CharField(max_length=255)
-    correct_answer = models.IntegerField(default=1)  # Store as an integer instead of a string
+    correct_answer = models.IntegerField(default=1)
 
     def __str__(self):
         return f"Question {self.id}: {self.question_text[:50]}..."
 
+class StudentScore(models.Model):
+    student_username = models.CharField(max_length=100) 
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="scores")
+    classcode = models.CharField(max_length=10)
+    grade = models.IntegerField()
+    score = models.IntegerField()
 
+    def __str__(self):
+        return f"{self.student_username} - Grade {self.grade} - Score: {self.score}"

@@ -7,12 +7,17 @@ export const StudentLogin = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [teacherCode, setTeacherCode] = useState('');
-  
+
   const tohome = () => {
     navigate('/');
   };
 
   const handleLogin = async () => {
+    if (!name.trim() || !teacherCode.trim()) {
+      alert("Please enter your name and teacher code.");
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:8000/api/student-login/', {
         method: 'POST',
@@ -26,7 +31,12 @@ export const StudentLogin = () => {
       }
 
       const data = await response.json();
-      const { quiz_id } = data;
+      const { username, grade, quiz_id } = data;
+
+      // Save to sessionStorage
+      sessionStorage.setItem('username', username);
+      sessionStorage.setItem('grade', grade);
+      sessionStorage.setItem('classcode', teacherCode);
 
       navigate('/question', { state: { quizId: quiz_id } });
 

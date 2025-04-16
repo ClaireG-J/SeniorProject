@@ -14,8 +14,8 @@ export const TeacherDashboard = () => {
         setTeacherCode(code);
     }, []);
 
-    const toScore = () => {
-        navigate('/teacherscore');
+    const toScore = (grade) => {
+        navigate('/teacherscore', { state: { teacherCode, grade } });
     };
 
     return (
@@ -31,9 +31,10 @@ export const TeacherDashboard = () => {
 
             <div className={styles.bottomRow}>
                 <div className={styles.buttons}>
-                    <div className={styles.button} onClick={toScore}>Grade 3</div>
-                    <div className={styles.button}>Grade 4</div>
-                    <div className={styles.button}>Grade 5</div>
+                    {/* Pass grade to toScore function */}
+                    <div className={styles.button} onClick={() => toScore(3)}>Grade 3</div>
+                    <div className={styles.button} onClick={() => toScore(4)}>Grade 4</div>
+                    <div className={styles.button} onClick={() => toScore(5)}>Grade 5</div>
                 </div>
             </div>
         </div>
