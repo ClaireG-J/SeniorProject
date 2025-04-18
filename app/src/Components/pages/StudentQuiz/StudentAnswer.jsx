@@ -4,6 +4,7 @@ import styles from "./StudentAnswer.module.css";
 import answerImage1 from "../../Assets/cat1.png";
 import answerImage2 from "../../Assets/cat2.png";
 import answerImage3 from "../../Assets/cat3.png";
+import { useSpeech } from "react-text-to-speech";
 
 export const StudentAnswer = () => {
   const navigate = useNavigate();
@@ -20,6 +21,14 @@ export const StudentAnswer = () => {
 
   const answerImages = [answerImage1, answerImage2, answerImage3];
   const currentQuestion = questions[currentQuestionIndex];
+
+  const {
+    Text,
+    speechStatus,
+    start,
+    pause,
+    stop
+  } = useSpeech({ text: currentQuestion?.question_text });
 
   const getAnswerImage = (optionNumber) => {
     return answerImages[optionNumber - 1];
@@ -85,7 +94,7 @@ export const StudentAnswer = () => {
 
       <div className={styles.questionContainer}>
         <h1 className={styles.question}>
-          {currentQuestion?.question_text}
+          <Text />
         </h1>
       </div>
 
@@ -110,14 +119,19 @@ export const StudentAnswer = () => {
         ))}
       </div>
 
-      <div className={styles.points}>Points for this question: {pointsLeft}</div>
-      <div className={styles.points}>Total Score: {totalScore}</div>
-
       {isAnsweredCorrectly && (
         <div className={styles.feedback}>
-          <span className={styles.correct}>Correct! +{pointsLeft} points</span>
+          <span className={styles.correct}>Correct!</span>
         </div>
       )}
+       <div className={styles.ttsControls} style={{ marginTop: "1rem", display: "flex", justifyContent: "center", gap: "1rem" }}>
+          {speechStatus !== "started" ? (
+            <button onClick={start}>🔊 Play</button>
+          ) : (
+            <button onClick={pause}>⏸️ Pause</button>
+          )}
+          <button onClick={stop}>⏹️ Stop</button>
+        </div>
     </div>
   );
 };
