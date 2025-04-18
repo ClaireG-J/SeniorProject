@@ -78,31 +78,31 @@ def student_login(request):
             data = json.loads(request.body)
             username = data.get("username")
             classcode = data.get("classcode")
+            grade = data.get("grade")
 
-           
-            student = Student.objects.get(username=username, classcode=classcode)  
+            teacher = Teacher.objects.filter(classcode=classcode).first()
+            if not teacher:
+                return JsonResponse({"error": "Invalid teacher code."}, status=404)
 
-            teacher_id = student.classcode 
-            grade = student.grade
+            existing_student = Student.objects.filter(username=username, classcode=classcode, grade=grade).first()
+            if existing_student:
+                return JsonResponse({"error": "Student already exists with this name and class code."}, status=400)
 
-            # Get the quiz for this teacher and grade
+            student = Student.objects.create(username=username, classcode=classcode, grade=grade)
+
             quiz = Quiz.objects.filter(teacher__classcode=classcode, grade=grade).first()
-
             if not quiz:
                 return JsonResponse({"error": "No quiz found for this grade and teacher."}, status=404)
 
             return JsonResponse({
-                "teacher_id": teacher_id,
+                "teacher_id": classcode,
                 "grade": grade,
                 "quiz_id": quiz.id,
                 "username": username,
             })
 
-        except Student.DoesNotExist:
-            return JsonResponse({"error": "Student not found. Check name and teacher code."}, status=404)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
-
 
 
 @csrf_exempt
