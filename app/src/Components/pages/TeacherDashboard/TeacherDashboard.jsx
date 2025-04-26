@@ -31,7 +31,6 @@ export const TeacherDashboard = () => {
 
             <div className={styles.bottomRow}>
                 <div className={styles.buttons}>
-                    {/* Pass grade to toScore function */}
                     <div className={styles.button} onClick={() => toScore(3)}>Grade 3</div>
                     <div className={styles.button} onClick={() => toScore(4)}>Grade 4</div>
                     <div className={styles.button} onClick={() => toScore(5)}>Grade 5</div>

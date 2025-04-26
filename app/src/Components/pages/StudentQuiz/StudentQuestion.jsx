@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./StudentQuestion.module.css";
+import { useSpeech } from "react-text-to-speech";
 
 export const StudentQuestion = () => {
   const navigate = useNavigate();
@@ -9,9 +10,8 @@ export const StudentQuestion = () => {
   const quizId = location.state?.quizId;
   const username = location.state?.username;
   const grade = location.state?.grade;
-  
-
   const hasSubmittedRef = useRef(false);
+
   const [promptIndex, setPromptIndex] = useState(location.state?.promptIndex || 0);
   const [prompt, setPrompt] = useState("");
   const [questions, setQuestions] = useState([]);
@@ -23,6 +23,13 @@ export const StudentQuestion = () => {
     classcode: sessionStorage.getItem('classcode') || ''
   });
   
+  const {
+    Text,
+    speechStatus,
+    start,
+    pause,
+    stop
+  } = useSpeech({ text: prompt });
 
   useEffect(() => {
     if (!quizId) {
@@ -47,7 +54,6 @@ export const StudentQuestion = () => {
             await submitScore();
             return;
           }
-          
 
           setPrompt(uniquePrompts[promptIndex] || "No more prompts.");
         } else {
@@ -64,9 +70,6 @@ export const StudentQuestion = () => {
 
   const toAnswerPage = () => {
     const filteredQuestions = questions.filter(q => q.prompt === prompt);
-
-    console.log(username, grade);
-
     navigate("/answer", {
       state: {
         questions: filteredQuestions,
@@ -85,18 +88,17 @@ export const StudentQuestion = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: studentInfo.username, // make sure this matches
-          grade: studentInfo.grade,       // make sure this matches
-          quizId: quizId,                 // quizId to link to the quiz
-          score: totalScore,   
-          classcode: studentInfo.classcode           // totalScore to submit
+          username: studentInfo.username,
+          grade: studentInfo.grade,
+          quizId,
+          score: totalScore,
+          classcode: studentInfo.classcode
         }),
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
-        // Navigate to score report or show success
         navigate("/scorereport", {
           state: {
             score: totalScore,
@@ -104,7 +106,6 @@ export const StudentQuestion = () => {
           },
         });
       } else {
-        // Show error message if the submission fails
         alert(result.error || "Something went wrong. Please try again.");
       }
     } catch (error) {
@@ -112,15 +113,24 @@ export const StudentQuestion = () => {
       alert("Error submitting score. Please try again.");
     }
   };
-  
 
   return (
     <div className={styles.background}>
       <div className={styles.questionContainer}>
         <h1 className={styles.question} onClick={toAnswerPage}>
-          {prompt || "Loading prompt..."}
+          <Text />
         </h1>
+  
+        <div className={styles.ttsControls} style={{ marginTop: "1rem", display: "flex", justifyContent: "center", gap: "1rem" }}>
+          {speechStatus !== "started" ? (
+            <button onClick={start}>🔊 Play</button>
+          ) : (
+            <button onClick={pause}>⏸️ Pause</button>
+          )}
+          <button onClick={stop}>⏹️ Stop</button>
+        </div>
       </div>
     </div>
   );
+  
 };

@@ -19,4 +19,6 @@ urlpatterns = [
     path('api/submit-score/', views.submit_score, name='submit-score'),
     path('api/student/<str:student_username>/grade/<int:grade>/score/', views.get_student_score, name="get_student_score"),
     path('api/scores/<str:classcode>/', views.get_scores_by_classcode, name='get_scores_by_classcode'),
+    path('api/forgot-password/', views.forgot_password, name='forgot_password'),
+    path('api/reset-password/<int:uid>/<str:token>/', views.reset_password, name='reset_password'),
 ]

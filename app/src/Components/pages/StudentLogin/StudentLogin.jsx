@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import styles from './StudentLogin.module.css'; 
 import frog_image from '../../Assets/frogButterfly.png';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const StudentLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation(); 
   const [name, setName] = useState('');
   const [teacherCode, setTeacherCode] = useState('');
+  const selectedGrade = location.state?.grade;
 
   const tohome = () => {
-    navigate('/');
+    navigate('/teacherlogin');
   };
 
   const handleLogin = async () => {
@@ -22,7 +24,7 @@ export const StudentLogin = () => {
       const response = await fetch('http://localhost:8000/api/student-login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: name, classcode: teacherCode })
+        body: JSON.stringify({ username: name, classcode: teacherCode, grade: selectedGrade })
       });
 
       if (!response.ok) {
@@ -33,9 +35,8 @@ export const StudentLogin = () => {
       const data = await response.json();
       const { username, grade, quiz_id } = data;
 
-      // Save to sessionStorage
       sessionStorage.setItem('username', username);
-      sessionStorage.setItem('grade', grade);
+      sessionStorage.setItem('grade', selectedGrade);
       sessionStorage.setItem('classcode', teacherCode);
 
       navigate('/question', { state: { quizId: quiz_id } });

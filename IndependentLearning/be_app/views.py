@@ -15,6 +15,11 @@ import json
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+from django.contrib.auth.tokens import default_token_generator
+import secrets
+from django.utils import timezone
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # This is essentially where the functions are for the backend. The functions go here
@@ -78,31 +83,31 @@ def student_login(request):
             data = json.loads(request.body)
             username = data.get("username")
             classcode = data.get("classcode")
+            grade = data.get("grade")
 
-           
-            student = Student.objects.get(username=username, classcode=classcode)  
+            teacher = Teacher.objects.filter(classcode=classcode).first()
+            if not teacher:
+                return JsonResponse({"error": "Invalid teacher code."}, status=404)
 
-            teacher_id = student.classcode 
-            grade = student.grade
+            existing_student = Student.objects.filter(username=username, classcode=classcode, grade=grade).first()
+            if existing_student:
+                return JsonResponse({"error": "Student already exists with this name and class code."}, status=400)
 
-            # Get the quiz for this teacher and grade
+            student = Student.objects.create(username=username, classcode=classcode, grade=grade)
+
             quiz = Quiz.objects.filter(teacher__classcode=classcode, grade=grade).first()
-
             if not quiz:
                 return JsonResponse({"error": "No quiz found for this grade and teacher."}, status=404)
 
             return JsonResponse({
-                "teacher_id": teacher_id,
+                "teacher_id": classcode,
                 "grade": grade,
                 "quiz_id": quiz.id,
                 "username": username,
             })
 
-        except Student.DoesNotExist:
-            return JsonResponse({"error": "Student not found. Check name and teacher code."}, status=404)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
-
 
 
 @csrf_exempt
@@ -324,6 +329,52 @@ def get_scores_by_classcode(request, classcode):
 
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+
+@api_view(['POST'])
+def forgot_password(request):
+    email = request.data.get('email')
+    user = get_object_or_404(Teacher, email=email)
+
+    token = secrets.token_urlsafe(32)
+
+    user.reset_token = token
+    user.reset_token_created_at = timezone.now()
+    user.save()
+
+    reset_link = f"http://localhost:3000/reset-password/{user.pk}/{token}" 
+
+    send_mail(
+        'Password Reset Request',
+        f'Click the link to reset your password: {reset_link}',
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+    )
+    return Response({"message": "Password reset email sent."}, status=200)
+
+
+@api_view(['POST'])
+def reset_password(request, uid, token):
+    try:
+        user = Teacher.objects.get(pk=uid)
+    except Teacher.DoesNotExist:
+        return Response({"error": "Invalid user."}, status=400)
+
+    if user.reset_token != token:
+        return Response({"error": "Invalid or expired token."}, status=400)
+
+    if (timezone.now() - user.reset_token_created_at).total_seconds() > 3600:
+        return Response({"error": "Token expired."}, status=400)
+
+    new_password = request.data.get('password')
+    if not new_password:
+        return Response({"error": "Password is required."}, status=400)
+
+    user.set_password(new_password)
+    user.reset_token = None
+    user.reset_token_created_at = None
+    user.save()
+
+    return Response({"message": "Password reset successful."})
 
 
 

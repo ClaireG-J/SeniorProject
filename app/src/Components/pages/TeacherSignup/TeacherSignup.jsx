@@ -1,4 +1,4 @@
-import React, {useState} from 'react'; 
+import React, { useState } from 'react';
 import styles from './TeacherSignup.module.css';
 import userIcon from '../../Assets/person.png';
 import emailIcon from '../../Assets/email.png';
@@ -22,6 +22,10 @@ export const TeacherSignup = () => {
         password: "",
         classcode: "",
     });
+
+    const toTeacherLogin = () => {
+        navigate('/teacherlogin')
+    }
 
     const [error, setError] = useState("");
 
@@ -47,7 +51,7 @@ export const TeacherSignup = () => {
             });
 
             const data = await response.json();
-            
+
             if (response.ok) {
                 alert("Signup successful!");
                 navigate('/teacherlogin'); // Redirect to login after successful signup
@@ -68,38 +72,42 @@ export const TeacherSignup = () => {
                     <div className={styles.underline}></div>
                 </div>
                 <div className={styles.inputs}>
-                        <div className={styles.input}>
-                            <label htmlFor="name" className={styles.visuallyHidden}>
-                                Name
-                            </label>
-                            <img src={userIcon} alt="User Icon" />
-                            <input id="name" name="name" type="text" placeholder="Name" value={formData.name} onChange={handleChange}/>
-                        </div>
+                    <div className={styles.input}>
+                        <label htmlFor="name" className={styles.visuallyHidden}>
+                            Name
+                        </label>
+                        <img src={userIcon} alt="User Icon" />
+                        <input id="name" name="name" type="text" placeholder="Name" value={formData.name} onChange={handleChange} />
+                    </div>
                     <div className={styles.input}>
                         <label htmlFor="email" className={styles.visuallyHidden}>
                             Email
                         </label>
                         <img src={emailIcon} alt="Email Icon" />
-                        <input id="email" name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange}/>
+                        <input id="email" name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
                     </div>
                     <div className={styles.input}>
                         <label htmlFor="password" className={styles.visuallyHidden}>
                             Password
                         </label>
                         <img src={passwordIcon} alt="Password Icon" />
-                        <input id="password" name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange}/>
+                        <input id="password" name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} />
                     </div>
-                        <div className={styles.input}>
-                            <label htmlFor="classCode" className={styles.visuallyHidden}>
-                                Class Code
-                            </label>
-                            <img src={userIcon} alt="Class Code Icon" />
-                            <input id="classCode" name="classcode" type="text" placeholder="Class Code" value={formData.classcode} onChange={handleChange}/>
-                        </div>
+                    <div className={styles.input}>
+                        <label htmlFor="classCode" className={styles.visuallyHidden}>
+                            Class Code
+                        </label>
+                        <img src={userIcon} alt="Class Code Icon" />
+                        <input id="classCode" name="classcode" type="text" placeholder="Class Code" value={formData.classcode} onChange={handleChange} />
+                    </div>
+                </div>
+                <div className={styles.forgotPassword}>
+                    Not a teacher? <span className={styles.clickHere} onClick={toTeacherLogin}>Click Here!</span>
                 </div>
                 <div className={styles.submitContainer}>
                     <div className={styles.submit} onClick={handleSignup}>Sign Up</div>
                 </div>
+
             </div>
         </div>
     );

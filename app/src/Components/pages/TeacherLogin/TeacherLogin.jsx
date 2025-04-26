@@ -24,20 +24,20 @@ export const TeacherLogin = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/login/', {  
+            const response = await fetch('http://localhost:8000/api/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             });
-    
+
             const data = await response.json();
-    
+
             if (response.ok) {
                 localStorage.setItem("teacherName", data.teacher);
                 localStorage.setItem("teacherCode", data.classcode);
-                
+
                 // Navigate to dashboard
                 toDashboard();
             } else {
@@ -47,7 +47,7 @@ export const TeacherLogin = () => {
             setError("Network error: " + error.message);
         }
     };
-    
+
 
     return (
         <div className={styles.pageWrapper}>
@@ -86,9 +86,10 @@ export const TeacherLogin = () => {
                 </div>
                 {error && <div className={styles.error}>{error}</div>}
                 <div className={styles.forgotPassword}>
-                    Forgot Password? <span className={styles.clickHere}>Click Here!</span><br />
+                    Forgot Password? <span className={styles.clickHere} onClick={() => navigate('/forgot-password')}>Click Here!</span><br />
                     Not a teacher? <span className={styles.clickHere} onClick={toHome}>Click Here!</span>
                 </div>
+
                 <div className={styles.submitContainer}>
                     <div
                         className={styles.submit}
