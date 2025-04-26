@@ -11,7 +11,7 @@ export const StudentLogin = () => {
   const selectedGrade = location.state?.grade;
 
   const tohome = () => {
-    navigate('/');
+    navigate('/teacherlogin');
   };
 
   const handleLogin = async () => {

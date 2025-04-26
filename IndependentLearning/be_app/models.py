@@ -1,21 +1,37 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password
+from django.utils import timezone
 
-# Teacher Model
 class Teacher(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=100, default="Unknown")
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     classcode = models.CharField(max_length=10, unique=True)
+    last_login = models.DateTimeField(default=timezone.now)
+    
+    # Fields for password reset
+    reset_token = models.CharField(max_length=255, null=True, blank=True)
+    reset_token_created_at = models.DateTimeField(null=True, blank=True)
+
+    def set_password(self, raw_password):
+        """Set a new hashed password."""
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        """Check if the given password matches the stored password."""
+        from django.contrib.auth.hashers import check_password
+        return check_password(raw_password, self.password)
 
     def save(self, *args, **kwargs):
-        if not self.password.startswith("pbkdf2_sha256$"):
+        # Ensure password is hashed before saving
+        if not self.password.startswith('pbkdf2_') and not self.password.startswith('argon2$'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
+
 
 # Student Model
 class Student(models.Model):

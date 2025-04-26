@@ -10,6 +10,8 @@ import { TeacherDashboard } from './Components/pages/TeacherDashboard/TeacherDas
 import { StudentQuestion } from './Components/pages/StudentQuiz/StudentQuestion';
 import { StudentScore } from './Components/pages/TeacherDashboard/StudentScore';
 import { ScoreReport } from './Components/pages/ScoreReport/ScoreReport';
+import { ForgotPassword } from './Components/pages/ForgotPassword/ForgotPassword';
+import { ResetPassword } from './Components/pages/ForgotPassword/ResetPassword';
 
 export default function App() {
   return (
@@ -24,6 +26,8 @@ export default function App() {
         <Route path="/question" element={<StudentQuestion/>} />
         <Route path="/dashboard" element={<TeacherDashboard/>} />
         <Route path="/teacherscore" element={<StudentScore/>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:uid/:token" element={<ResetPassword/>} />
       </Routes>
     </Router>
   );
