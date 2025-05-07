@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./StudentAnswer.module.css";
-import answerImage1 from "../../Assets/cat1.png";
-import answerImage2 from "../../Assets/cat2.png";
-import answerImage3 from "../../Assets/cat3.png";
 import { useSpeech } from "react-text-to-speech";
 
 export const StudentAnswer = () => {
@@ -12,54 +9,39 @@ export const StudentAnswer = () => {
   const questions = location.state?.questions || [];
   const quizId = location.state?.quizId;
   const promptIndex = location.state?.promptIndex || 0;
+  const initialScore = location.state?.totalScore || 0;
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [disabledOptions, setDisabledOptions] = useState([]);
   const [pointsLeft, setPointsLeft] = useState(4);
   const [isAnsweredCorrectly, setIsAnsweredCorrectly] = useState(false);
-  const [totalScore, setTotalScore] = useState(location.state?.totalScore || 0);
+  const [totalScore, setTotalScore] = useState(initialScore);
 
-  const answerImages = [answerImage1, answerImage2, answerImage3];
   const currentQuestion = questions[currentQuestionIndex];
+  const currentText = currentQuestion?.question_text || "";
 
-  const {
-    Text,
-    speechStatus,
-    start,
-    pause,
-    stop
-  } = useSpeech({ text: currentQuestion?.question_text });
+  const { Text, speechStatus, start, pause, stop } = useSpeech({ text: currentText });
 
-  const getAnswerImage = (optionNumber) => {
-    return answerImages[optionNumber - 1];
-  };
+  if (!currentQuestion) return <div>Loading question...</div>;
 
   const checkAnswer = (selectedOption) => {
     const correctAnswer = parseInt(currentQuestion.correct_answer, 10);
-
     if (selectedOption === correctAnswer) {
       setIsAnsweredCorrectly(true);
       const updatedScore = totalScore + pointsLeft;
       setTotalScore(updatedScore);
-      setTimeout(() => {
-        goToNextQuestion(updatedScore);
-      }, 1000);
-
-    } else {
-      if (!disabledOptions.includes(selectedOption)) {
-        setDisabledOptions((prev) => [...prev, selectedOption]);
-        setPointsLeft((prev) => Math.max(prev - 1, 0));
-      }
+      setTimeout(() => goToNextQuestion(updatedScore), 1000);
+    } else if (!disabledOptions.includes(selectedOption)) {
+      setDisabledOptions((prev) => [...prev, selectedOption]);
+      setPointsLeft((prev) => Math.max(prev - 1, 0));
     }
   };
 
   const goToNextQuestion = (scoreToCarry) => {
     const nextIndex = currentQuestionIndex + 1;
-  
     if (nextIndex < questions.length) {
       const currentPrompt = currentQuestion.prompt;
       const nextPrompt = questions[nextIndex].prompt;
-  
       if (currentPrompt !== nextPrompt) {
         navigate("/question", {
           state: {
@@ -84,7 +66,72 @@ export const StudentAnswer = () => {
       });
     }
   };
-  
+
+  const speakText = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.cancel(); // stop ongoing speech
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const renderOption = (index, option) => {
+    let fullImageUrl = null;
+
+    if (option.image) {
+      if (/^https?:\/\//.test(option.image)) {
+        fullImageUrl = option.image;
+      } else {
+        fullImageUrl = `http://localhost:8000${option.image.startsWith('/') ? '' : '/'}${option.image}`;
+      }
+    }
+
+    const optionNum = index + 1;
+
+    return (
+      <div
+        key={optionNum}
+        className={`${styles.answerBox}
+          ${disabledOptions.includes(optionNum) ? styles.disabled : ""}
+          ${isAnsweredCorrectly && parseInt(currentQuestion.correct_answer, 10) === optionNum ? styles.selected : ""}
+        `}
+        onClick={() =>
+          !disabledOptions.includes(optionNum) &&
+          !isAnsweredCorrectly &&
+          checkAnswer(optionNum)
+        }
+      >
+        {fullImageUrl ? (
+          <img
+            src={fullImageUrl}
+            alt={`Option ${optionNum}`}
+            className={styles.answerImage}
+            onError={() => console.warn(`Image failed to load: ${fullImageUrl}`)}
+          />
+        ) : (
+          <div className={styles.answerText}>
+            {option.text || "No text provided"}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                speakText(option.text || "");
+              }}
+              className={styles.ttsButton}
+              style={{
+                marginLeft: "8px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "1.2rem",
+              }}
+              aria-label={`Play option ${optionNum}`}
+              title="Play text"
+            >
+              🔊
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className={styles.background}>
@@ -99,24 +146,7 @@ export const StudentAnswer = () => {
       </div>
 
       <div className={styles.answersContainer}>
-        {[1, 2, 3].map((option) => (
-          <div
-            key={option}
-            className={`${styles.answerBox} 
-              ${disabledOptions.includes(option) ? styles.disabled : ""}
-              ${isAnsweredCorrectly && parseInt(currentQuestion.correct_answer) === option ? styles.selected : ""}
-            `}
-            onClick={() =>
-              !disabledOptions.includes(option) && !isAnsweredCorrectly && checkAnswer(option)
-            }
-          >
-            <img
-              src={getAnswerImage(option)}
-              alt={`Answer ${option}`}
-              className={styles.answerImage}
-            />
-          </div>
-        ))}
+        {currentQuestion.options?.map((option, idx) => renderOption(idx, option))}
       </div>
 
       {isAnsweredCorrectly && (
@@ -124,14 +154,18 @@ export const StudentAnswer = () => {
           <span className={styles.correct}>Correct!</span>
         </div>
       )}
-       <div className={styles.ttsControls} style={{ marginTop: "1rem", display: "flex", justifyContent: "center", gap: "1rem" }}>
-          {speechStatus !== "started" ? (
-            <button onClick={start}>🔊 Play</button>
-          ) : (
-            <button onClick={pause}>⏸️ Pause</button>
-          )}
-          <button onClick={stop}>⏹️ Stop</button>
-        </div>
+
+      <div
+        className={styles.ttsControls}
+        style={{ marginTop: "1rem", display: "flex", justifyContent: "center", gap: "1rem" }}
+      >
+        {speechStatus !== "started" ? (
+          <button onClick={start}>🔊 Play</button>
+        ) : (
+          <button onClick={pause}>⏸️ Pause</button>
+        )}
+        <button onClick={stop}>⏹️ Stop</button>
+      </div>
     </div>
   );
 };

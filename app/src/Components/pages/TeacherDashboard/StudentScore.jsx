@@ -36,6 +36,28 @@ export const StudentScore = () => {
     fetchScores();
   }, [teacherCode]);
 
+  const handleDelete = async (username) => {
+    const confirm = window.confirm(`Are you sure you want to delete ${username} and all their scores?`);
+    if (!confirm) return;
+  
+    try {
+      const response = await fetch(`http://localhost:8000/api/delete-student/${username}/`, {
+        method: 'DELETE',
+      });
+  
+      if (response.status === 204) {
+        setScores(prev => prev.filter(s => s.student_username !== username));
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to delete: ${errorData.error}`);
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("An error occurred while deleting.");
+    }
+  };
+  
+
   const toDashboard = () => {
     navigate("/dashboard");
   };
@@ -57,13 +79,21 @@ export const StudentScore = () => {
           <tbody>
             {scores.length === 0 ? (
               <tr>
-                <td colSpan="2" className={styles.noScores}>No scores available</td>
+                <td colSpan="3" className={styles.noScores}>No scores available</td>
               </tr>
             ) : (
               scores.map((student, index) => (
                 <tr key={index}>
                   <td>{student.student_username || 'Unnamed'}</td>
                   <td>{student.score ?? 'N/A'}</td>
+                  <td>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => handleDelete(student.student_username)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))
             )}

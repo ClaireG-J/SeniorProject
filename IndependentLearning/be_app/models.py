@@ -58,15 +58,26 @@ def get_default_quiz():
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions", default=get_default_quiz)
-    prompt = models.TextField()
-    question_text = models.TextField()
-    option_one = models.CharField(max_length=255)
-    option_two = models.CharField(max_length=255)
-    option_three = models.CharField(max_length=255)
+    prompt = models.TextField(blank=True)
+    
+    # Either one of these should be set
+    question_text = models.TextField(blank=True, null=True)
+    question_image = models.ImageField(upload_to="question_images/", blank=True, null=True)
+
+    option_one_text = models.CharField(max_length=255, blank=True)
+    option_two_text = models.CharField(max_length=255, blank=True)
+    option_three_text = models.CharField(max_length=255, blank=True)
+
+    option_one_image = models.ImageField(upload_to="option_images/", blank=True, null=True)
+    option_two_image = models.ImageField(upload_to="option_images/", blank=True, null=True)
+    option_three_image = models.ImageField(upload_to="option_images/", blank=True, null=True)
+
     correct_answer = models.IntegerField(default=1)
 
     def __str__(self):
-        return f"Question {self.id}: {self.question_text[:50]}..."
+        return f"Question {self.id}: {self.question_text or 'Image Question'}"
+
+
 
 class StudentScore(models.Model):
     student_username = models.CharField(max_length=100) 
