@@ -110,32 +110,45 @@ def student_login(request):
             return JsonResponse({"error": str(e)}, status=400)
 
 
-@csrf_exempt
+
 def get_all_questions(request, quiz_id):
     try:
-        quiz = Quiz.objects.filter(id=quiz_id).first()
-        if not quiz:
-            return JsonResponse({"error": "Quiz not found"}, status=404)
+        quiz = Quiz.objects.get(id=quiz_id)  # Raises exception if no quiz is found
+    except Quiz.DoesNotExist:
+        return JsonResponse({"error": "Quiz not found"}, status=404)
 
-        questions = Question.objects.filter(quiz=quiz).order_by("id")
-        if not questions:
-            return JsonResponse({"error": "No questions found for this quiz"}, status=404)
+    questions = Question.objects.filter(quiz=quiz).order_by("id")
+    
+    if not questions:
+        return JsonResponse({"questions": []}, status=200)  # Return empty array if no questions
 
-        question_data = []
-        for question in questions:
-            question_data.append({
-                "question_text": question.question_text,
-                "option_one": question.option_one,
-                "option_two": question.option_two,
-                "option_three": question.option_three,
-                "correct_answer": question.correct_answer,
-                "prompt": question.prompt,
-            })
+    question_data = []
+    for question in questions:
+        question_data.append({
+            "question_text": question.question_text,
+            "prompt": question.prompt,  # Ensure 'prompt' is a valid field
+            "correct_answer": question.correct_answer,
+            "options": [
+                {
+                    "text": question.option_one_text,
+                    "image": request.build_absolute_uri(question.option_one_image.url) if question.option_one_image else None
+                },
+                {
+                    "text": question.option_two_text,
+                    "image": request.build_absolute_uri(question.option_two_image.url) if question.option_two_image else None
+                },
+                {
+                    "text": question.option_three_text,
+                    "image": request.build_absolute_uri(question.option_three_image.url) if question.option_three_image else None
+                }
+            ]
+        })
 
-        return JsonResponse({"questions": question_data})
+    return JsonResponse({"questions": question_data}, status=200)
 
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+
+
+
 
 
 
@@ -208,54 +221,68 @@ def create_quiz_with_questions(request):
 def create_question(request, quiz_id):
     if request.method == "POST":
         try:
-            # Get the quiz by its ID
-            quiz = get_object_or_404(Quiz, id=quiz_id)
+            quiz = Quiz.objects.filter(id=quiz_id).first()
+            if not quiz:
+                return JsonResponse({"error": "Quiz not found"}, status=404)
 
-            # Parse the JSON body
-            data = json.loads(request.body)
+            data = request.POST
+            files = request.FILES
 
-            # Retrieve data from the POST request (now it's a dictionary)
             question_text = data.get("question_text")
-            option_one = data.get("option_one")
-            option_two = data.get("option_two")
-            option_three = data.get("option_three")
-            correct_answer = data.get("correct_answer")
+            question_image = files.get("question_image")
+
+            if not question_text and not question_image:
+                return JsonResponse({"error": "Either question_text or question_image is required"}, status=400)
+
             prompt = data.get("prompt")
+            correct_answer = data.get("correct_answer")
 
-            # Validate that the data is complete
-            if not question_text or not option_one or not option_two or not option_three or correct_answer is None:
-                return JsonResponse({"error": "Invalid input data"}, status=400)
+            # Must provide correct answer
+            if not correct_answer:
+                return JsonResponse({"error": "correct_answer is required"}, status=400)
 
-            # Ensure correct_answer is an integer and within valid options
             try:
-                correct_answer = int(correct_answer)  # Convert string to integer
+                correct_answer = int(correct_answer)
+                if correct_answer not in [1, 2, 3]:
+                    raise ValueError()
             except ValueError:
-                return JsonResponse({"error": "Invalid correct_answer value"}, status=400)
+                return JsonResponse({"error": "Correct answer must be 1, 2, or 3"}, status=400)
 
-            if correct_answer not in [1, 2, 3]:
-                return JsonResponse({"error": "Correct answer must be one of 1, 2, or 3"}, status=400)
+            # Use exact model field names here
+            option_one_text = data.get("option_one_text", "")
+            option_two_text = data.get("option_two_text", "")
+            option_three_text = data.get("option_three_text", "")
 
-            # Create the new question
+            option_one_image = files.get("option_one_image")
+            option_two_image = files.get("option_two_image")
+            option_three_image = files.get("option_three_image")
+
             question = Question.objects.create(
                 quiz=quiz,
-                question_text=question_text,
-                option_one=option_one,
-                option_two=option_two,
-                option_three=option_three,
-                correct_answer=correct_answer,
                 prompt=prompt,
+                question_text=question_text,
+                question_image=question_image,
+                correct_answer=correct_answer,
+                option_one_text=option_one_text,
+                option_two_text=option_two_text,
+                option_three_text=option_three_text,
+                option_one_image=option_one_image,
+                option_two_image=option_two_image,
+                option_three_image=option_three_image,
             )
 
             return JsonResponse({
                 "message": "Question created successfully",
-                "question_id": question.id,
-                "question_text": question.question_text
+                "question_id": question.id
             }, status=201)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid HTTP method"}, status=405)
+
+
+
 
 @api_view(['POST'])
 def submit_score(request):
@@ -375,6 +402,22 @@ def reset_password(request, uid, token):
     user.save()
 
     return Response({"message": "Password reset successful."})
+
+
+@api_view(['DELETE'])
+def delete_student_and_score(request, username):
+    try:
+        # Delete related scores first
+        StudentScore.objects.filter(student_username=username).delete()
+
+        # Then delete the student
+        student = Student.objects.get(username=username)
+        student.delete()
+
+        return Response({"message": "Student and scores deleted"}, status=204)
+    except Student.DoesNotExist:
+        return Response({"error": "Student not found"}, status=404)
+
 
 
 

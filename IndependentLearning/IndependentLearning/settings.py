@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +27,9 @@ SECRET_KEY = 'django-insecure-_&b_*nixg^7x10i7+@)cxq+x43s%53o*_(jyge%i^gd-s&mb4q
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Application definition
@@ -128,9 +132,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com' 
 EMAIL_PORT = 587  
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'gmail' 
-EMAIL_HOST_PASSWORD = 'passcode'  
-DEFAULT_FROM_EMAIL = 'gmail'
+EMAIL_HOST_USER = 'zekepulido@gmail.com' 
+EMAIL_HOST_PASSWORD = 'jpwo txfq thvo zvnf'  
+DEFAULT_FROM_EMAIL = 'zekepulido@gmail.com'
 
 
 # Static files (CSS, JavaScript, Images)
