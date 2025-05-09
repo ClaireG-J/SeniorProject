@@ -18,7 +18,7 @@ export const ScoreReport = () => {
   useEffect(() => {
     const fetchScore = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/student/${studentInfo.username}/grade/${studentInfo.grade}/score/`, {
+        const response = await fetch(`https://ila1.pythonanywhere.com/api/student/${studentInfo.username}/grade/${studentInfo.grade}/score/`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' }
         });

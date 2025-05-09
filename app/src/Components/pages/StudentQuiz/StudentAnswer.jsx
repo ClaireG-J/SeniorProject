@@ -80,7 +80,7 @@ export const StudentAnswer = () => {
       if (/^https?:\/\//.test(option.image)) {
         fullImageUrl = option.image;
       } else {
-        fullImageUrl = `http://localhost:8000${option.image.startsWith('/') ? '' : '/'}${option.image}`;
+        fullImageUrl = `https://ila1.pythonanywhere.com${option.image.startsWith('/') ? '' : '/'}${option.image}`;
       }
     }
 
@@ -135,9 +135,6 @@ export const StudentAnswer = () => {
 
   return (
     <div className={styles.background}>
-      <div className={styles.questionNumber}>
-        Question {currentQuestionIndex + 1}
-      </div>
 
       <div className={styles.questionContainer}>
         <h1 className={styles.question}>

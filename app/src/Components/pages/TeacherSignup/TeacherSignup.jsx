@@ -42,7 +42,7 @@ export const TeacherSignup = () => {
         setError("");  // Clear any previous errors
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/signup/", {
+            const response = await fetch("https://ila1.pythonanywhere.com/api/signup/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
