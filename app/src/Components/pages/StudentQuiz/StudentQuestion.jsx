@@ -16,6 +16,7 @@ export const StudentQuestion = () => {
   const [prompt, setPrompt] = useState("");
   const [questions, setQuestions] = useState([]);
   const [totalScore, setTotalScore] = useState(location.state?.totalScore || 0);
+  const [maxScore, setMaxScore] = useState(0);
 
   const [studentInfo, setStudentInfo] = useState({
     username: sessionStorage.getItem('username') || '',
@@ -51,7 +52,7 @@ export const StudentQuestion = () => {
 
           if (promptIndex >= uniquePrompts.length && !hasSubmittedRef.current) {
             hasSubmittedRef.current = true;
-            await submitScore();
+            await submitScore(data.max_score);
             return;
           }
 
@@ -80,7 +81,7 @@ export const StudentQuestion = () => {
     });
   };
 
-  const submitScore = async () => {
+  const submitScore = async (maxScoreFromData) => {
     try {
       const response = await fetch("http://localhost:8000/api/submit-score/", {
         method: "POST",
@@ -97,11 +98,12 @@ export const StudentQuestion = () => {
       });
 
       const result = await response.json();
-
+      console.log(maxScore)
       if (response.ok) {
         navigate("/scorereport", {
           state: {
             score: totalScore,
+            max_score: maxScoreFromData,
             message: result.message || "Score submitted successfully",
           },
         });

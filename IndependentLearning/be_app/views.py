@@ -110,13 +110,12 @@ def student_login(request):
             return JsonResponse({"error": str(e)}, status=400)
 
 
-
+@csrf_exempt
 def get_all_questions(request, quiz_id):
     try:
         quiz = Quiz.objects.get(id=quiz_id)  # Raises exception if no quiz is found
     except Quiz.DoesNotExist:
         return JsonResponse({"error": "Quiz not found"}, status=404)
-
     questions = Question.objects.filter(quiz=quiz).order_by("id")
     
     if not questions:
@@ -144,7 +143,7 @@ def get_all_questions(request, quiz_id):
             ]
         })
 
-    return JsonResponse({"questions": question_data}, status=200)
+    return JsonResponse({"questions": question_data, "max_score": quiz.max_score}, status=200)
 
 
 
@@ -182,7 +181,7 @@ def create_student(request):
 
 
 @csrf_exempt
-def create_quiz_with_questions(request):
+def create_quiz(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
@@ -194,18 +193,6 @@ def create_quiz_with_questions(request):
 
             # Create the Quiz
             quiz = Quiz.objects.create(teacher=teacher, grade=data["grade"])
-
-            # Add Questions
-            for q in data["questions"]:
-                Question.objects.create(
-                    quiz=quiz,
-                    prompt=q["prompt"],
-                    question_text=q["question_text"],
-                    option_one=q["option_one"],
-                    option_two=q["option_two"],
-                    option_three=q["option_three"],
-                    correct_answer=q["correct_answer"],
-                )
 
             return JsonResponse({"message": "Quiz created successfully!", "quiz_id": quiz.id}, status=201)
 

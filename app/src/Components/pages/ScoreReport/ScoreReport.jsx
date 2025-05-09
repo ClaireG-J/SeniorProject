@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ScoreReport.module.css'; 
 import frog_image from '../../Assets/frogWink.png';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const ScoreReport = () => {
+  const location = useLocation();
+  
   const [score, setScore] = useState(null);  // To store the score
-  const [error, setError] = useState(null);  // To handle errors
+  const [error, setError] = useState(null); 
+  const maxScore = location.state?.max_score;
 
   const [studentInfo] = useState({
     username: sessionStorage.getItem('username') || '',
@@ -46,7 +49,7 @@ export const ScoreReport = () => {
       <button className={styles['home-button']} onClick={tohome}>Home</button>
       <div className={styles.reportbox}>
         Your Score:<br />
-        {score !== null ? `${score} / 21` : 'Loading...'}
+        {score !== null ? `${score} / ${maxScore}` : 'Loading...'}
         {error && <p>{error}</p>}
       </div>
       <div className={styles['frog-image-container']}>

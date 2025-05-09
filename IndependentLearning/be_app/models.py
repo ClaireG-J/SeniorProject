@@ -49,6 +49,7 @@ class Quiz(models.Model):
     id = models.BigAutoField(primary_key=True)
     teacher = models.ForeignKey("Teacher", on_delete=models.CASCADE, to_field="classcode")
     grade = models.IntegerField()
+    max_score =  models.IntegerField()
 
     def __str__(self):
         return f"Quiz {self.id}"  
