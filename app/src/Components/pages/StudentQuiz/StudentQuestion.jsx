@@ -41,7 +41,7 @@ export const StudentQuestion = () => {
     const fetchQuestions = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/quiz/${quizId}/get-all-questions/`
+          `https://ila1.pythonanywhere.com/api/quiz/${quizId}/get-all-questions/`
         );
         if (!response.ok) throw new Error("Failed to fetch questions.");
         const data = await response.json();
@@ -83,7 +83,7 @@ export const StudentQuestion = () => {
 
   const submitScore = async (maxScoreFromData) => {
     try {
-      const response = await fetch("http://localhost:8000/api/submit-score/", {
+      const response = await fetch("https://ila1.pythonanywhere.com/api/submit-score/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -81,20 +81,37 @@ def student_login(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            username = data.get("username")
+            username = data.get("username", "").strip()
             classcode = data.get("classcode")
             grade = data.get("grade")
 
+            # Validate required fields
+            if not username or not classcode or grade is None:
+                return JsonResponse({"error": "Missing required fields."}, status=400)
+
+            # Check if teacher exists
             teacher = Teacher.objects.filter(classcode=classcode).first()
             if not teacher:
                 return JsonResponse({"error": "Invalid teacher code."}, status=404)
 
-            existing_student = Student.objects.filter(username=username, classcode=classcode, grade=grade).first()
+            # Check if student already exists (case-insensitive username match)
+            existing_student = Student.objects.filter(
+                username__iexact=username,
+                classcode=classcode,
+                grade=grade
+            ).first()
+
             if existing_student:
                 return JsonResponse({"error": "Student already exists with this name and class code."}, status=400)
 
-            student = Student.objects.create(username=username, classcode=classcode, grade=grade)
+            # Create the new student
+            student = Student.objects.create(
+                username=username,
+                classcode=classcode,
+                grade=grade
+            )
 
+            # Find matching quiz
             quiz = Quiz.objects.filter(teacher__classcode=classcode, grade=grade).first()
             if not quiz:
                 return JsonResponse({"error": "No quiz found for this grade and teacher."}, status=404)
@@ -103,11 +120,12 @@ def student_login(request):
                 "teacher_id": classcode,
                 "grade": grade,
                 "quiz_id": quiz.id,
-                "username": username,
+                "username": student.username,
             })
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
 
 
 @csrf_exempt

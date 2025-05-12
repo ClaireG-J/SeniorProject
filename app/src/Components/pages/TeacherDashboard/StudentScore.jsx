@@ -19,7 +19,7 @@ export const StudentScore = () => {
 
     const fetchScores = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/scores/${teacherCode}/?grade=${grade}`, {
+        const response = await fetch(`https://ila1.pythonanywhere.com/api/scores/${teacherCode}/?grade=${grade}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' }
         });
@@ -41,7 +41,7 @@ export const StudentScore = () => {
     if (!confirm) return;
   
     try {
-      const response = await fetch(`http://localhost:8000/api/delete-student/${username}/`, {
+      const response = await fetch(`https://ila1.pythonanywhere.com/api/delete-student/${username}/`, {
         method: 'DELETE',
       });
   

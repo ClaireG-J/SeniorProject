@@ -21,7 +21,7 @@ export const StudentLogin = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/student-login/', {
+      const response = await fetch('https://ila1.pythonanywhere.com/api/student-login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: name, classcode: teacherCode, grade: selectedGrade })
