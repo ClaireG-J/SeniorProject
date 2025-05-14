@@ -29,7 +29,7 @@
 
 .codeWrapper {
     position: absolute;
-    right: 3%;
+    right: 10%;
     top: .2px;
     display: flex;
     flex-direction: column;
@@ -104,3 +104,17 @@
 .button:hover {
     background-color: rgb(200, 177, 177);
 }
+
+.home-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgb(226, 201, 201);
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 4px 2px 3px rgba(175, 166, 166, 0.462);
+  }
