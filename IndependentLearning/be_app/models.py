@@ -39,6 +39,7 @@ class Student(models.Model):
     username = models.CharField(max_length=100)
     classcode = models.CharField(max_length=10)
     grade = models.IntegerField()
+    subject = models.CharField(max_length=10)
 
     def __str__(self):
         return self.username
@@ -50,6 +51,7 @@ class Quiz(models.Model):
     teacher = models.ForeignKey("Teacher", on_delete=models.CASCADE, to_field="classcode")
     grade = models.IntegerField()
     max_score =  models.IntegerField()
+    subject = models.CharField(max_length=10)
 
     def __str__(self):
         return f"Quiz {self.id}"  

@@ -8,6 +8,7 @@ export const StudentLogin = () => {
   const location = useLocation(); 
   const [name, setName] = useState('');
   const [teacherCode, setTeacherCode] = useState('');
+  const [subject, setSubject] = useState('ELA');  // Default subject
   const selectedGrade = location.state?.grade;
 
   const tohome = () => {
@@ -21,10 +22,15 @@ export const StudentLogin = () => {
     }
 
     try {
-      const response = await fetch('https://ila1.pythonanywhere.com/api/student-login/', {
+      const response = await fetch('http://127.0.0.1:8000/api/student-login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: name, classcode: teacherCode, grade: selectedGrade })
+        body: JSON.stringify({ 
+          username: name, 
+          classcode: teacherCode, 
+          grade: selectedGrade,
+          subject: subject
+        })
       });
 
       if (!response.ok) {
@@ -38,6 +44,7 @@ export const StudentLogin = () => {
       sessionStorage.setItem('username', username);
       sessionStorage.setItem('grade', selectedGrade);
       sessionStorage.setItem('classcode', teacherCode);
+      sessionStorage.setItem('subject', subject);
 
       navigate('/question', { state: { quizId: quiz_id } });
 
@@ -70,6 +77,16 @@ export const StudentLogin = () => {
             value={teacherCode} 
             onChange={(e) => setTeacherCode(e.target.value)} 
           />
+
+          <h3 className={styles['form-title']}>Subject</h3>
+          <select 
+            className={styles['form-input']} 
+            value={subject} 
+            onChange={(e) => setSubject(e.target.value)}
+          >
+            <option value="ELA">ELA</option>
+            <option value="MATH">MATH</option>
+          </select>
 
           <div className={styles.home}>
             Not a student? <span className={styles.clickHere} onClick={tohome}>Click Here!</span>

@@ -75,7 +75,6 @@ def login_teacher(request):
     except Teacher.DoesNotExist:
         return Response({"error": "Teacher not found"}, status=404)
 
-
 @csrf_exempt
 def student_login(request):
     if request.method == "POST":
@@ -84,9 +83,10 @@ def student_login(request):
             username = data.get("username", "").strip()
             classcode = data.get("classcode")
             grade = data.get("grade")
+            subject = data.get("subject", "").strip().upper()
 
             # Validate required fields
-            if not username or not classcode or grade is None:
+            if not username or not classcode or grade is None or not subject:
                 return JsonResponse({"error": "Missing required fields."}, status=400)
 
             # Check if teacher exists
@@ -98,23 +98,25 @@ def student_login(request):
             existing_student = Student.objects.filter(
                 username__iexact=username,
                 classcode=classcode,
-                grade=grade
+                grade=grade,
+                subject=subject
             ).first()
 
             if existing_student:
-                return JsonResponse({"error": "Student already exists with this name and class code."}, status=400)
+                return JsonResponse({"error": "Student already exists with this name, class code, grade, and subject."}, status=400)
 
             # Create the new student
             student = Student.objects.create(
                 username=username,
                 classcode=classcode,
-                grade=grade
+                grade=grade,
+                subject=subject
             )
 
             # Find matching quiz
-            quiz = Quiz.objects.filter(teacher__classcode=classcode, grade=grade).first()
+            quiz = Quiz.objects.filter(teacher__classcode=classcode, grade=grade, subject=subject).first()
             if not quiz:
-                return JsonResponse({"error": "No quiz found for this grade and teacher."}, status=404)
+                return JsonResponse({"error": "No quiz found for this grade, subject, and teacher."}, status=404)
 
             return JsonResponse({
                 "teacher_id": classcode,
@@ -125,6 +127,7 @@ def student_login(request):
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
 
 
 
@@ -373,7 +376,7 @@ def forgot_password(request):
     user.reset_token_created_at = timezone.now()
     user.save()
 
-    reset_link = f"http://localhost:3000/reset-password/{user.pk}/{token}" 
+    reset_link = f"https://ila1.pythonanywhere.com/reset-password/{user.pk}/{token}" 
 
     send_mail(
         'Password Reset Request',
