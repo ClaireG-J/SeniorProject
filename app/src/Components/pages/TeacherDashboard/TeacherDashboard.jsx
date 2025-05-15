@@ -17,7 +17,11 @@ export const TeacherDashboard = () => {
     const toScore = (grade) => {
         navigate('/teacherscore', { state: { teacherCode, grade } });
     };
-
+    
+    const tohome = () => {
+        navigate('/');
+    };
+    
     return (
         <div className={styles.pageWrapper}>
             <div className={styles.topRow}>
@@ -26,6 +30,7 @@ export const TeacherDashboard = () => {
                     <div className={styles.codeTitle}>This is your Teacher Code:</div>
                     <div className={styles.code}>{teacherCode}</div>
                 </div>
+                <button className={styles['home-button']} onClick={tohome}>Logout</button>
                 <div className={styles.gradePrompt}>Select the grade that you would like to view</div>
             </div>
 
